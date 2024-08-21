@@ -1,0 +1,12 @@
+fun main(){
+    val a:String="hi"
+    val b:String?=a as? String
+    if(b!=null)
+    {
+        print("typecast.successful")
+    }
+    else
+    {
+        print("typecast.unsuccessful")
+    }
+}
