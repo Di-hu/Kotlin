@@ -1,0 +1,7 @@
+fun main(){
+    val arr= arrayOf("Hi","Hello","123")
+        for(x in arr.indices)
+        {
+            println("element at index $x is ${arr[x]}")
+        }
+}
