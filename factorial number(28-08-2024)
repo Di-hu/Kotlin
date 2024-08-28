@@ -1,0 +1,12 @@
+// factorial of number
+fun main() {
+    println("Enter a number:")
+    val number = readLine()?.toIntOrNull() ?: return
+
+    val factorial = factorial(number)
+    println("Factorial of $number = $factorial")
+}
+
+fun factorial(n: Int): Long {
+    return if (n == 0 || n == 1) 1 else n * factorial(n - 1)
+}
