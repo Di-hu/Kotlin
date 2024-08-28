@@ -1,0 +1,20 @@
+class Rectangle(val length: Double, val width: Double) {
+
+
+    fun area(): Double {
+        return length * width
+    }
+
+
+    fun displayArea() {
+        println("The area of rectangle is: ${area()}")
+    }
+}
+
+fun main() {
+
+    val rectangle = Rectangle(5.0, 8.0)
+
+
+    rectangle.displayArea()
+}
