@@ -1,0 +1,17 @@
+open class Rectangle(val length: Double, val width: Double) {
+    fun area() = length * width
+    fun displayArea() = println(" Area of rectangle is: ${area()}")
+}
+
+class Square(val side: Double) {
+    fun area() = side * side
+    fun displayArea() = println("Area of square is: ${area()}")
+}
+
+fun main() {
+    val rectangle = Rectangle(5.0, 3.0)
+    rectangle.displayArea()
+
+    val square = Square(5.0)
+    square.displayArea()
+}
