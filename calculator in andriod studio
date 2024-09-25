@@ -1,0 +1,131 @@
+package com.example.calculator
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.GridLayout
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.setPadding
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var resultText: TextView
+    private var lastNumeric: Boolean = false
+    private var stateError: Boolean = false
+    private var lastDot: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Create Layouts Programmatically
+        val rootLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(16)
+        }
+
+        resultText = TextView(this).apply {
+            text = "0"
+            textSize = 36f
+            setPadding(16)
+        }
+        rootLayout.addView(resultText, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            marginStart = 16
+            marginEnd = 16
+        })
+
+        val gridLayout = GridLayout(this).apply {
+            rowCount = 5
+            columnCount = 4
+        }
+
+        // Add Buttons Programmatically
+        val buttonLabels = arrayOf(
+            "C", "/", "7", "8", "9", "*",
+            "4", "5", "6", "-", "1", "2",
+            "3", "+", "0", ".", "="
+        )
+
+        buttonLabels.forEach { label ->
+            val button = Button(this).apply {
+                text = label
+                textSize = 24f
+                setOnClickListener { onButtonClick(label) }
+            }
+
+            gridLayout.addView(button, GridLayout.LayoutParams().apply {
+                width = 0
+                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+            })
+        }
+
+        rootLayout.addView(gridLayout, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+
+        setContentView(rootLayout)
+    }
+
+    private fun onButtonClick(label: String) {
+        when (label) {
+            "C" -> onClear()
+            "=" -> onEqual()
+            "." -> onDecimalPoint()
+            "+", "-", "*", "/" -> onOperator(label)
+            else -> onDigit(label)
+        }
+    }
+
+    private fun onDigit(value: String) {
+        if (stateError) {
+            resultText.text = value
+            stateError = false
+        } else {
+            resultText.append(value)
+        }
+        lastNumeric = true
+    }
+
+    private fun onOperator(operator: String) {
+        if (lastNumeric && !stateError) {
+            resultText.append(operator)
+            lastNumeric = false
+            lastDot = false
+        }
+    }
+
+    private fun onDecimalPoint() {
+        if (lastNumeric && !stateError && !lastDot) {
+            resultText.append(".")
+            lastNumeric = false
+            lastDot = true
+        }
+    }
+
+    private fun onClear() {
+        resultText.text = ""
+        lastNumeric = false
+        stateError = false
+        lastDot = false
+    }
+
+    private fun onEqual() {
+        if (lastNumeric && !stateError) {
+            val expression = resultText.text.toString()
+
+            try {
+                val result = eval(expression)
+                resultText.text = result.toString()
+                lastDot = true
+            } catch (e: Exception) {
+                resultText.text = "Error"
+                stateError = true
+                lastNumeric = false
+            }
+        }
+    }
+
+    private fun eval(str: String): Double {
+        return str.toDoubleOrNull() ?: throw Exception("Invalid input")
+    }
+}
